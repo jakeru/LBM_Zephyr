@@ -124,11 +124,11 @@ static const uint8_t user_app_key[16]     = USER_LORAWAN_APP_KEY;
  */
 
 #define USER_BUTTON_NODE	DT_ALIAS(smtc_user_button)
-#if !DT_NODE_HAS_STATUS(USER_BUTTON_NODE, okay)
-#error "Unsupported board: smtc-user-button devicetree alias is not defined"
-#endif
+#define HAS_USER_BUTTON DT_NODE_HAS_STATUS(USER_BUTTON_NODE, okay)
+#if HAS_USER_BUTTON
 static const struct gpio_dt_spec button = GPIO_DT_SPEC_GET_OR(USER_BUTTON_NODE, gpios, {0});
 static struct gpio_callback button_cb_data;
+#endif
 
 
 
@@ -179,7 +179,9 @@ static void modem_event_callback( void );
  *
  * @param context Define by the user at the init
  */
+#if HAS_USER_BUTTON
 static void user_button_callback( const void* context );
+#endif
 
 /**
  * @brief Send the 32bits uplink counter on chosen port
@@ -266,6 +268,7 @@ static struct smtc_modem_hal_cb prv_hal_cb = {
 /* A binary semaphore to notify the main LBM loop */
 K_SEM_DEFINE(periodical_uplink_event_sem, 0, 1);
 
+#if HAS_USER_BUTTON
 /* for zephyr compat*/
 void button_pressed(const struct device *dev, struct gpio_callback *cb,
 		    uint32_t pins)
@@ -273,22 +276,23 @@ void button_pressed(const struct device *dev, struct gpio_callback *cb,
 	printk("%s", __FUNCTION__);
 	user_button_callback(dev);
 }
+#endif
+
 /**
  * @brief Example to send a user payload on an external event
  *
  */
 int main(void)
 {
-	int ret = 0;
-
 	lora_basics_modem_start_work_thread(&modem_event_callback, &prv_hal_cb);
 
+#if HAS_USER_BUTTON
 	if (!gpio_is_ready_dt(&button)) {
 		printk("Error: button device %s is not ready\n", button.port->name);
 		return 1;
 	}
 
-	ret = gpio_pin_configure_dt(&button, GPIO_INPUT);
+	int ret = gpio_pin_configure_dt(&button, GPIO_INPUT);
 	if (ret != 0) {
 		printk("Error %d: failed to configure %s pin %d\n",
 		       ret, button.port->name, button.pin);
@@ -305,10 +309,12 @@ int main(void)
 
 	gpio_init_callback(&button_cb_data, button_pressed, BIT(button.pin));
 	gpio_add_callback(button.port, &button_cb_data);
+#endif
 
     SMTC_HAL_TRACE_INFO( "Periodical uplink (%d sec) example is starting \n", PERIODICAL_UPLINK_DELAY_S );
 
     while (true) {
+#if HAS_USER_BUTTON
         // Check button
         if (user_button_is_press == true) {
             user_button_is_press = false;
@@ -323,6 +329,7 @@ int main(void)
             }
             smtc_modem_hal_wake_up();
         }
+#endif
 
         hal_watchdog_reload();
         if ((user_button_is_press == false) && (smtc_modem_is_irq_flag_pending( ) == false)) {
@@ -529,6 +536,7 @@ static void modem_event_callback( void )
     } while( event_pending_count > 0 );
 }
 
+#if HAS_USER_BUTTON
 static void user_button_callback(const void* context )
 {
     SMTC_HAL_TRACE_INFO( "Button pushed\n" );
@@ -546,6 +554,7 @@ static void user_button_callback(const void* context )
     // Wake up the main thread
     k_sem_give(&periodical_uplink_event_sem);
 }
+#endif
 
 static void send_uplink_counter_on_port( uint8_t port )
 {
