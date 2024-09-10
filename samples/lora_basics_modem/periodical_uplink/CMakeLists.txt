@@ -24,5 +24,5 @@ zephyr_compile_definitions_ifdef(LORA_BASICS_MODEM_CRYPTOGRAPHY_LR11XX
 zephyr_compile_definitions_ifdef(
   LORA_BASICS_MODEM_CRYPTOGRAPHY_LR11XX_WITH_CREDENTIALS USE_LR11XX_CRYPTO)
 
-zephyr_compile_definitions_ifdef(CONFIG_LORA_BASICS_MODEM_RELAY_TX_ENABLE
+zephyr_compile_definitions_ifdef(CONFIG_LORA_BASICS_MODEM_RELAY_TX
                                  USE_RELAY_TX)

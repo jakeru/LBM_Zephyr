@@ -17,6 +17,10 @@
 
 #include "smtc_hal_watchdog.h"
 
+#if defined( USE_RELAY_TX )
+#include "smtc_modem_relay_api.h"
+#endif
+
 #include <zephyr/kernel.h>
 #include <zephyr/drivers/gpio.h>
 #include <smtc_modem_hal_init.h>

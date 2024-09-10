@@ -272,9 +272,8 @@ config LORA_BASICS_MODEM_BEACON_TX
 	bool "Enable beacon transmission support"
 	default n
 
-# TODO:
 config LORA_BASICS_MODEM_RELAY_TX
-	bool "Enable relay TX feature"
+	bool "Enable relay TX feature (experimental)"
 	default n
 
 # TODO: not released yet
