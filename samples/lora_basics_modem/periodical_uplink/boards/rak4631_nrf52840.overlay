@@ -1,0 +1,38 @@
+#include <zephyr/dt-bindings/lora_lbm/sx126x.h>
+
+/ {
+	chosen {
+		zephyr,lora-transceiver = &lora_lbm;
+	};
+	aliases {
+		lora-transceiver = &lora_lbm;
+		smtc-hal-uart = &uart1;
+		smtc-watchdog = &wdt;
+	};
+};
+
+&spi1 {
+	status = "okay";
+
+	cs-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
+
+	/*
+	This node is inspired by the `semtech,sx1262` compatible node in
+	zephyr/boards/rak/rak4631/rak4631_nrf52840.dts.
+	*/
+	lora_lbm: lora_lbm@0 {
+		status = "okay";
+
+		compatible = "semtech,sx1262-new";
+		reg = <0>;
+		reset-gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
+		busy-gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
+		dio1-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
+		dio2-as-rf-switch;
+		dio3-as-tcxo-control;
+		reg-mode = <SX126X_REG_MODE_DCDC>;
+		tcxo-voltage = <SX126X_TCXO_SUPPLY_3_3V>;
+		tcxo-wakeup-time = <5>;
+		spi-max-frequency = <1000000>;
+	};
+};

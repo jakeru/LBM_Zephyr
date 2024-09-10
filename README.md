@@ -113,6 +113,21 @@ For example, to set a TCXO instead of the default XTAL:
 };
 ```
 
+## Building for the RAK4631 module
+
+The Periodical Uplink example can be built for the
+[RAK4631 WisBlock LPWAN Module](https://docs.rakwireless.com/Product-Categories/WisBlock/RAK4631/Overview/)
+by going into its directory and running:
+
+```bash
+west build --board rak4631
+```
+
+By copying the file
+`samples/lora_basics_modem/periodical_uplink/boards/rak4631_nrf52840.overlay`
+to other applications it should be possible to build them as well for the
+RAK4631 module.
+
 ## Flash the board
 
 ```bash
