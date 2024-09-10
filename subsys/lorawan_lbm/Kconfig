@@ -275,11 +275,24 @@ config LORA_BASICS_MODEM_BEACON_TX
 config LORA_BASICS_MODEM_RELAY_TX
 	bool "Enable relay TX feature (experimental)"
 	default n
+	select LORA_BASICS_MODEM_RELAY_COMMON
 
-# TODO: not released yet
-# config LORA_BASICS_MODEM_RELAY_RX
-# 	bool "Enable relay RX support"
-# 	default n
+config LORA_BASICS_MODEM_RELAY_RX
+	bool "Enable relay RX support (experimental)"
+	default n
+	select LORA_BASICS_MODEM_RELAY_COMMON
+	help
+	 To build a relay you need to:
+	 1. In SWL2001 repository: Checkout the `v4.6.0-feature-relay` tag.
+	 2. In SWL2001 repository: Copy the file `zephyr/module.yml` from the
+	    `v4.5.0-feature-zephyr` tag. This is one way of doing that:
+	    `git checkout v4.5.0-feature-zephyr -- zephyr/module.yml`.
+	 3. Enable the LORA_BASICS_MODEM_RELAY_RX feature in `prj.conf`.
+
+config LORA_BASICS_MODEM_RELAY_COMMON
+	bool
+	help
+	 True if relay TX or relay RX is enabled
 
 #-----------------------------------------------------------------------------
 # Miscellaneous options

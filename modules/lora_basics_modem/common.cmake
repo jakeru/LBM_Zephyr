@@ -28,12 +28,19 @@ zephyr_library_sources(
   ${LBM_SMTC_MODEM_CORE_DIR}/modem_utilities/fifo_ctrl.c
   ${LBM_SMTC_MODEM_CORE_DIR}/modem_utilities/modem_core.c
   ${LBM_SMTC_MODEM_CORE_DIR}/modem_supervisor/modem_supervisor_light.c
-  ${LBM_SMTC_MODEM_CORE_DIR}/modem_supervisor/modem_tx_protocol_manager.c
   ${LBM_SMTC_MODEM_CORE_DIR}/lorawan_packages/lorawan_certification/lorawan_certification.c
   ${LBM_SMTC_MODEM_CORE_DIR}/lorawan_manager/lorawan_join_management.c
   ${LBM_SMTC_MODEM_CORE_DIR}/lorawan_manager/lorawan_send_management.c
   ${LBM_SMTC_MODEM_CORE_DIR}/lorawan_manager/lorawan_cid_request_management.c
   ${LBM_SMTC_MODEM_CORE_DIR}/lorawan_manager/lorawan_dwn_ack_management.c
+)
+
+zephyr_library_sources_ifndef(CONFIG_LORA_BASICS_MODEM_RELAY_RX
+    # NOTE: This file is not part of the v4.6.0-feature-relay tag of the
+    # SWL repository which, is the tag to use at the time of writing.
+    # In the future this file will probably be needed also when building
+    # with the relay RX feature enabled.
+  ${LBM_SMTC_MODEM_CORE_DIR}/modem_supervisor/modem_tx_protocol_manager.c
 )
 
 # LR1MAC_C_SOURCES

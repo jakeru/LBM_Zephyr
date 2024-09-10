@@ -426,6 +426,7 @@ static void prv_event_process(void)
 			LOG_DBG("LORAWAN WIFI_TERMINATED EVENT");
 			/* TODO: */
 			break;
+#if CONFIG_LORA_BASICS_MODEM_RELAY_TX
 		case SMTC_MODEM_EVENT_RELAY_TX_DYNAMIC:
 			LOG_DBG("LORAWAN TX_DYNAMIC EVENT");
 			/* TODO: */
@@ -438,6 +439,7 @@ static void prv_event_process(void)
 			LOG_DBG("LORAWAN RELAY_TX_SYNC EVENT");
 			/* TODO: */
 			break;
+#endif
 		default:
 			LOG_WRN("UNKNOWN EVENT: %d", current_event.event_type);
 			break;

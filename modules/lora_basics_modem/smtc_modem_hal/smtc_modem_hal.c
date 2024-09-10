@@ -16,6 +16,7 @@
 #include <zephyr/storage/flash_map.h>
 
 #include <lora_lbm_transceiver.h>
+#include <lora_basics_modem_version.h>
 
 // for variadic args
 #include <stdarg.h>
@@ -119,6 +120,25 @@ uint32_t smtc_modem_hal_get_time_in_ms(void)
 	/* The wrapping every 49 days is expected by the modem lib */
 	return k_uptime_get_32();
 }
+
+#ifdef CONFIG_LORA_BASICS_MODEM_RELAY_RX
+
+#if LORA_BASICS_MODEM_FW_VERSION_MAJOR == 4 && LORA_BASICS_MODEM_FW_VERSION_MINOR == 6
+uint32_t smtc_modem_hal_get_time_in_100us( void )
+{
+    return k_uptime_get_32() * 10;
+}
+#else
+/* When building with CONFIG_LORA_BASICS_MODEM_RELAY_RX enabled we should (at
+ * the time of writing), build using the `v4.6.0-feature-relay` tag of the
+ * SWL2001 repository.
+ * The function smtc_modem_hal_get_time_in_100us() above (and this check) can be
+ * removed when the relay feature gets updated or integrated into the main
+ * branch. */
+#warning CONFIG_LORA_BASICS_MODEM_RELAY_RX is enabled but LBM version is not 4.6. Consider checking out tag v4.6.0-feature-relay.
+#endif
+
+#endif // CONFIG_LORA_BASICS_MODEM_RELAY_RX
 
 void smtc_modem_hal_set_offset_to_test_wrapping(const uint32_t offset_to_test_wrapping)
 {

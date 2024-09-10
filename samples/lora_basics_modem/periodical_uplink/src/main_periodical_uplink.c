@@ -116,7 +116,11 @@ static const uint8_t user_app_key[16]     = USER_LORAWAN_APP_KEY;
  * @brief Periodical uplink alarm delay in seconds
  */
 #ifndef PERIODICAL_UPLINK_DELAY_S
+#ifdef RELAY_RX
+#define PERIODICAL_UPLINK_DELAY_S 3600
+#else
 #define PERIODICAL_UPLINK_DELAY_S 60
+#endif
 #endif
 
 #ifndef DELAY_FIRST_MSG_AFTER_JOIN
@@ -517,6 +521,7 @@ static void modem_event_callback( void )
         case SMTC_MODEM_EVENT_MUTE:
             SMTC_HAL_TRACE_INFO( "Event received: MUTE\n" );
             break;
+#if defined( USE_RELAY_TX )
         case SMTC_MODEM_EVENT_RELAY_TX_DYNAMIC:  //!< Relay TX dynamic mode has enable or disable the WOR protocol
             SMTC_HAL_TRACE_INFO( "Event received: RELAY_TX_DYNAMIC\n" );
             break;
@@ -526,6 +531,7 @@ static void modem_event_callback( void )
         case SMTC_MODEM_EVENT_RELAY_TX_SYNC:  //!< Relay TX synchronisation has changed
             SMTC_HAL_TRACE_INFO( "Event received: RELAY_TX_SYNC\n" );
             break;
+#endif
         default:
             SMTC_HAL_TRACE_ERROR( "Unknown event %u\n", current_event.event_type );
             break;
