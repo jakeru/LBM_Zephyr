@@ -35,11 +35,12 @@ LOG_MODULE_REGISTER(smtc_modem, CONFIG_LORA_BASICS_MODEM_LOG_LEVEL);
  *
  * @param[in] text The text to check
  * @return true If string is useless and should not be printed
- * @return false If string i not useless and should be printed
+ * @return false If string is not useless and should be printed
  */
 static bool prv_string_is_useless(char *text)
 {
-	for (int i = 0; i < strlen(text); i++) {
+	const int len = strlen(text);
+	for (int i = 0; i < len; i++) {
 		if (text[i] != '\n' && text[i] != ' ' && text[i] != '*') {
 			return false;
 		}
@@ -91,7 +92,7 @@ void smtc_modem_hal_print_trace(const char *fmt, ...)
 
 	va_list args;
 	va_start(args, fmt);
-	vsprintf(text, fmt, args);
+	vsnprintf(text, sizeof(text), fmt, args);
 	if (!prv_string_is_useless(text)) {
 
 		char *ttext = prv_string_trim(text);
@@ -108,7 +109,7 @@ void smtc_modem_hal_print_trace_inf(const char *fmt, ...)
 
 	va_list args;
 	va_start(args, fmt);
-	vsprintf(text, fmt, args);
+	vsnprintf(text, sizeof(text), fmt, args);
 	if (!prv_string_is_useless(text)) {
 
 		char *ttext = prv_string_trim(text);
@@ -125,7 +126,7 @@ void smtc_modem_hal_print_trace_dbg(const char *fmt, ...)
 
 	va_list args;
 	va_start(args, fmt);
-	vsprintf(text, fmt, args);
+	vsnprintf(text, sizeof(text), fmt, args);
 	if (!prv_string_is_useless(text)) {
 
 		char *ttext = prv_string_trim(text);
@@ -142,7 +143,7 @@ void smtc_modem_hal_print_trace_err(const char *fmt, ...)
 
 	va_list args;
 	va_start(args, fmt);
-	vsprintf(text, fmt, args);
+	vsnprintf(text, sizeof(text), fmt, args);
 	if (!prv_string_is_useless(text)) {
 
 		char *ttext = prv_string_trim(text);
@@ -159,7 +160,7 @@ void smtc_modem_hal_print_trace_wrn(const char *fmt, ...)
 
 	va_list args;
 	va_start(args, fmt);
-	vsprintf(text, fmt, args);
+	vsnprintf(text, sizeof(text), fmt, args);
 	if (!prv_string_is_useless(text)) {
 
 		char *ttext = prv_string_trim(text);
